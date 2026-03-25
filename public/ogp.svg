@@ -1,0 +1,82 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#1e40af"/>
+      <stop offset="100%" stop-color="#3b82f6"/>
+    </linearGradient>
+    <linearGradient id="card" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#ffffff" stop-opacity="1"/>
+      <stop offset="100%" stop-color="#f8fafc" stop-opacity="1"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Background -->
+  <rect width="1200" height="630" fill="url(#bg)"/>
+
+  <!-- Subtle grid pattern -->
+  <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
+    <path d="M 40 0 L 0 0 0 40" fill="none" stroke="white" stroke-width="0.3" stroke-opacity="0.1"/>
+  </pattern>
+  <rect width="1200" height="630" fill="url(#grid)"/>
+
+  <!-- Left: App name & tagline -->
+  <text x="80" y="240" font-family="sans-serif" font-size="72" font-weight="800" fill="white" letter-spacing="-2">PostKit</text>
+  <text x="80" y="300" font-family="sans-serif" font-size="26" fill="white" fill-opacity="0.85">SNS 投稿プレビューツール</text>
+  <text x="80" y="345" font-family="sans-serif" font-size="20" fill="white" fill-opacity="0.65">X・Instagram・Threads の投稿を書く前に確認</text>
+
+  <!-- Divider line -->
+  <rect x="80" y="380" width="56" height="4" rx="2" fill="white" fill-opacity="0.5"/>
+
+  <text x="80" y="430" font-family="sans-serif" font-size="18" fill="white" fill-opacity="0.6">文字数カウント　ハッシュタグ確認　テンプレート保存</text>
+
+  <!-- X preview card -->
+  <rect x="490" y="90" width="220" height="160" rx="16" fill="url(#card)" filter="drop-shadow(0 8px 24px rgba(0,0,0,0.25))"/>
+  <!-- X avatar -->
+  <circle cx="518" cy="120" r="14" fill="#3b82f6"/>
+  <text x="518" y="125" font-family="sans-serif" font-size="12" font-weight="700" fill="white" text-anchor="middle">P</text>
+  <text x="540" y="115" font-family="sans-serif" font-size="10" font-weight="700" fill="#111827">PostKit User</text>
+  <text x="540" y="129" font-family="sans-serif" font-size="9" fill="#6b7280">@postkit_user</text>
+  <!-- X body text -->
+  <text x="510" y="155" font-family="sans-serif" font-size="10" fill="#111827">新機能をリリースしました！</text>
+  <text x="510" y="170" font-family="sans-serif" font-size="10" fill="#0ea5e9">#SNS #マーケティング</text>
+  <!-- X actions -->
+  <text x="510" y="210" font-family="sans-serif" font-size="9" fill="#9ca3af">♥ 0　↺ 0　→</text>
+  <!-- X label -->
+  <rect x="490" y="62" width="28" height="18" rx="4" fill="white" fill-opacity="0.2"/>
+  <text x="504" y="75" font-family="sans-serif" font-size="11" font-weight="700" fill="white" text-anchor="middle">X</text>
+
+  <!-- Instagram preview card -->
+  <rect x="730" y="80" width="220" height="200" rx="16" fill="url(#card)" filter="drop-shadow(0 8px 24px rgba(0,0,0,0.25))"/>
+  <!-- IG header -->
+  <circle cx="757" cy="108" r="11" fill="#f59e0b"/>
+  <text x="775" y="113" font-family="sans-serif" font-size="10" font-weight="700" fill="#111827">postkit_user</text>
+  <!-- IG image area -->
+  <rect x="730" y="123" width="220" height="80" fill="#fdf2f8"/>
+  <text x="840" y="168" font-family="sans-serif" font-size="11" fill="#d1d5db" text-anchor="middle">画像エリア</text>
+  <!-- IG caption -->
+  <text x="746" y="225" font-family="sans-serif" font-size="9" fill="#111827">今日の振り返り ✨</text>
+  <text x="746" y="238" font-family="sans-serif" font-size="9" fill="#0ea5e9">#日常 #ライフスタイル</text>
+  <text x="746" y="268" font-family="sans-serif" font-size="8" fill="#9ca3af">文字数：32 / 2,200</text>
+  <!-- IG label -->
+  <rect x="730" y="52" width="58" height="18" rx="4" fill="white" fill-opacity="0.2"/>
+  <text x="759" y="65" font-family="sans-serif" font-size="11" font-weight="700" fill="white" text-anchor="middle">Instagram</text>
+
+  <!-- Threads preview card -->
+  <rect x="610" y="310" width="220" height="160" rx="16" fill="url(#card)" filter="drop-shadow(0 8px 24px rgba(0,0,0,0.25))"/>
+  <!-- Threads avatar -->
+  <circle cx="636" cy="340" r="13" fill="#374151"/>
+  <text x="636" y="345" font-family="sans-serif" font-size="10" font-weight="700" fill="white" text-anchor="middle">P</text>
+  <text x="656" y="337" font-family="sans-serif" font-size="10" font-weight="700" fill="#111827">postkit_user</text>
+  <!-- Threads text -->
+  <text x="620" y="365" font-family="sans-serif" font-size="10" fill="#111827">Threads でも発信中です</text>
+  <text x="620" y="380" font-family="sans-serif" font-size="10" fill="#0ea5e9">#Threads</text>
+  <!-- Threads actions -->
+  <text x="620" y="440" font-family="sans-serif" font-size="9" fill="#9ca3af">♥ 0　返信　↺ 0</text>
+  <!-- Threads label -->
+  <rect x="610" y="282" width="52" height="18" rx="4" fill="white" fill-opacity="0.2"/>
+  <text x="636" y="295" font-family="sans-serif" font-size="11" font-weight="700" fill="white" text-anchor="middle">Threads</text>
+
+  <!-- URL badge -->
+  <rect x="80" y="545" width="200" height="32" rx="16" fill="white" fill-opacity="0.15"/>
+  <text x="180" y="566" font-family="sans-serif" font-size="14" fill="white" fill-opacity="0.9" text-anchor="middle">postkit-pi.vercel.app</text>
+</svg>
