@@ -8,6 +8,7 @@ import { TemplatePanel } from './components/TemplatePanel'
 import { LicenseModal } from './components/LicenseModal'
 import { usePro } from './hooks/usePro'
 import { useTemplates } from './hooks/useTemplates'
+import { splitIntoThread, highlightText } from './lib/formatter'
 
 type Platform = 'x' | 'instagram' | 'threads'
 
@@ -115,7 +116,36 @@ export default function App() {
         {/* Right: Preview */}
         <div>
           <p className="text-xs text-gray-400 mb-3 text-center">プレビュー（参考表示）</p>
-          {platform === 'x' && <TwitterPreview text={text} />}
+          {platform === 'x' && (() => {
+            const parts = text ? splitIntoThread(text, 140) : []
+            const isThread = parts.length > 1
+            return isThread ? (
+              <div className="space-y-3">
+                <p className="text-xs text-blue-500 text-center">スレッド分割：{parts.length}件</p>
+                {parts.map((part, i) => (
+                  <div key={i} className="relative">
+                    <span className="absolute -top-2 left-4 bg-blue-100 text-blue-600 text-xs rounded-full px-2 py-0.5">{i + 1}</span>
+                    <div className="border border-blue-200 rounded-2xl p-4 bg-white max-w-sm mx-auto font-sans">
+                      <div className="flex items-start gap-3 mb-2">
+                        <div className="w-10 h-10 rounded-full bg-gradient-to-br from-blue-400 to-blue-600 shrink-0 flex items-center justify-center text-white font-bold text-sm">P</div>
+                        <div>
+                          <p className="font-bold text-gray-900 text-sm leading-tight">PostKit User</p>
+                          <p className="text-gray-500 text-xs">@postkit_user</p>
+                        </div>
+                      </div>
+                      <div
+                        className="text-gray-900 text-sm leading-relaxed whitespace-pre-wrap break-words"
+                        dangerouslySetInnerHTML={{ __html: highlightText(part) }}
+                      />
+                      <p className="text-xs text-gray-400 mt-2 text-right">{[...part].length} / 140</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <TwitterPreview text={text} />
+            )
+          })()}
           {platform === 'instagram' && <InstagramPreview text={text} />}
           {platform === 'threads' && <ThreadsPreview text={text} />}
         </div>
@@ -123,7 +153,7 @@ export default function App() {
 
       {/* Footer */}
       <footer className="text-center text-xs text-gray-400 py-8">
-        © 2026 PostKit · <a href="https://yomiyasu.lemonsqueezy.com" className="hover:underline">購入はこちら</a>
+        © 2026 PostKit · <a href="https://yomiyasu.lemonsqueezy.com/checkout/buy/5e721fc2-3134-4454-8332-2a1fab41dd32" className="hover:underline">Pro版を購入</a>
       </footer>
 
       {/* License modal */}
