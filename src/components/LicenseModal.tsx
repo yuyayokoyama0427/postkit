@@ -1,6 +1,6 @@
 import { useState } from 'react'
 
-const CHECKOUT_URL = 'https://yomiyasu.lemonsqueezy.com/checkout/buy/postkit-placeholder'
+const CHECKOUT_URL = 'https://yomiyasu.lemonsqueezy.com/checkout/buy/5e721fc2-3134-4454-8332-2a1fab41dd32'
 
 interface Props {
   onActivate: (key: string) => Promise<void>
