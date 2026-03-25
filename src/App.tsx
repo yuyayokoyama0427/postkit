@@ -33,16 +33,16 @@ const FREE_LIMITS: Record<Platform, number> = {
 
 // プレミアムプランの文字数制限
 const PREMIUM_LIMITS: Record<Platform, number> = {
-  x: 25000,      // X Premium
-  instagram: 2200, // Instagram は変わらず
-  threads: 1000,  // Threads+ (Meta Verified)
+  x: 25000,      // X Premium（全プランで25,000文字）
+  instagram: 2200, // Meta Verifiedでも変わらず
+  threads: 500,   // Meta Verifiedでも変わらず
 }
 
-// プレミアム切替を表示するプラットフォーム
+// プレミアム切替を表示するプラットフォーム（X のみ）
 const HAS_PREMIUM_TIER: Record<Platform, boolean> = {
   x: true,
   instagram: false,
-  threads: true,
+  threads: false,
 }
 
 const PRO_PLATFORMS: Platform[] = ['instagram', 'threads']
