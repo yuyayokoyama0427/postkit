@@ -18,16 +18,47 @@ const PLATFORM_LABELS: Record<Platform, string> = {
   threads: 'Threads',
 }
 
+const EDITOR_LABELS: Record<Platform, string> = {
+  x: 'X（文字数はURL換算あり）',
+  instagram: 'Instagram',
+  threads: 'Threads',
+}
+
+// 無料プランの文字数制限
+const FREE_LIMITS: Record<Platform, number> = {
+  x: 280,
+  instagram: 2200,
+  threads: 500,
+}
+
+// プレミアムプランの文字数制限
+const PREMIUM_LIMITS: Record<Platform, number> = {
+  x: 25000,      // X Premium
+  instagram: 2200, // Instagram は変わらず
+  threads: 1000,  // Threads+ (Meta Verified)
+}
+
+// プレミアム切替を表示するプラットフォーム
+const HAS_PREMIUM_TIER: Record<Platform, boolean> = {
+  x: true,
+  instagram: false,
+  threads: true,
+}
+
 const PRO_PLATFORMS: Platform[] = ['instagram', 'threads']
 
 export default function App() {
   const [text, setText] = useState('')
   const [platform, setPlatform] = useState<Platform>('x')
+  const [premiumModes, setPremiumModes] = useState<Record<Platform, boolean>>({ x: false, instagram: false, threads: false })
   const [showTemplates, setShowTemplates] = useState(false)
   const [showModal, setShowModal] = useState(false)
 
   const { isPro, activate, deactivate, loading, error } = usePro()
   const { templates, addTemplate, removeTemplate } = useTemplates()
+
+  const premiumMode = premiumModes[platform]
+  const currentLimit = (isPro && premiumMode) ? PREMIUM_LIMITS[platform] : FREE_LIMITS[platform]
 
   function handlePlatformChange(p: Platform) {
     if (PRO_PLATFORMS.includes(p) && !isPro) {
@@ -35,6 +66,11 @@ export default function App() {
       return
     }
     setPlatform(p)
+  }
+
+  function togglePremium() {
+    if (!isPro) { setShowModal(true); return }
+    setPremiumModes(prev => ({ ...prev, [platform]: !prev[platform] }))
   }
 
   return (
@@ -76,7 +112,17 @@ export default function App() {
           </div>
 
           {/* Text editor */}
-          <Editor text={text} platform={platform} onChange={setText} />
+          <Editor
+            text={text}
+            platform={platform}
+            limit={currentLimit}
+            label={EDITOR_LABELS[platform]}
+            isPro={isPro}
+            premiumMode={isPro && premiumMode}
+            showPremiumToggle={isPro && HAS_PREMIUM_TIER[platform]}
+            onTogglePremium={togglePremium}
+            onChange={setText}
+          />
 
           {/* Clear button */}
           {text && (
@@ -117,7 +163,8 @@ export default function App() {
         <div>
           <p className="text-xs text-gray-400 mb-3 text-center">プレビュー（参考表示）</p>
           {platform === 'x' && (() => {
-            const parts = text ? splitIntoThread(text, 140) : []
+            const splitLimit = currentLimit <= 280 ? currentLimit : 280
+            const parts = text ? splitIntoThread(text, splitLimit) : []
             const isThread = parts.length > 1
             return isThread ? (
               <div className="space-y-3">
@@ -137,7 +184,7 @@ export default function App() {
                         className="text-gray-900 text-sm leading-relaxed whitespace-pre-wrap break-words"
                         dangerouslySetInnerHTML={{ __html: highlightText(part) }}
                       />
-                      <p className="text-xs text-gray-400 mt-2 text-right">{[...part].length} / 140</p>
+                      <p className="text-xs text-gray-400 mt-2 text-right">{[...part].length} / {splitLimit}</p>
                     </div>
                   </div>
                 ))}

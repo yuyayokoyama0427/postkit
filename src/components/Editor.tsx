@@ -4,24 +4,17 @@ import { calcXLength } from '../lib/formatter'
 interface Props {
   text: string
   platform: 'x' | 'instagram' | 'threads'
+  limit: number
+  label: string
+  isPro: boolean
+  premiumMode: boolean
+  showPremiumToggle: boolean
+  onTogglePremium: () => void
   onChange: (text: string) => void
 }
 
-const LIMITS: Record<Props['platform'], number> = {
-  x: 140,
-  instagram: 2200,
-  threads: 500,
-}
-
-const LABELS: Record<Props['platform'], string> = {
-  x: 'X（文字数はURL換算あり）',
-  instagram: 'Instagram',
-  threads: 'Threads',
-}
-
-export function Editor({ text, platform, onChange }: Props) {
+export function Editor({ text, platform, limit, label, isPro, premiumMode, showPremiumToggle, onTogglePremium, onChange }: Props) {
   const [copied, setCopied] = useState(false)
-  const limit = LIMITS[platform]
   const count = platform === 'x' ? calcXLength(text) : [...text].length
   const remaining = limit - count
   const isOver = remaining < 0
@@ -35,7 +28,24 @@ export function Editor({ text, platform, onChange }: Props) {
   return (
     <div>
       <div className="flex items-center justify-between mb-1">
-        <label className="text-xs text-gray-500">{LABELS[platform]}</label>
+        <div className="flex items-center gap-2">
+          <label className="text-xs text-gray-500">{label}</label>
+          {showPremiumToggle && (
+            <button
+              onClick={onTogglePremium}
+              className={`text-xs rounded-full px-2 py-0.5 font-medium transition-colors ${
+                premiumMode
+                  ? 'bg-amber-100 text-amber-700 hover:bg-amber-200'
+                  : 'bg-gray-100 text-gray-500 hover:bg-gray-200'
+              }`}
+            >
+              {premiumMode ? '★ プレミアム' : '☆ プレミアム'}
+            </button>
+          )}
+          {!isPro && (
+            <span className="text-xs text-gray-300">プレミアム切替はPro版</span>
+          )}
+        </div>
         {text && (
           <button
             onClick={handleCopy}
@@ -65,7 +75,7 @@ export function Editor({ text, platform, onChange }: Props) {
       <div className="flex items-center justify-between mt-1">
         <span className="text-xs text-gray-400">{count.toLocaleString()} / {limit.toLocaleString()}</span>
         <span className={`text-xs font-medium ${isOver ? 'text-red-500' : remaining <= 20 ? 'text-yellow-500' : 'text-gray-400'}`}>
-          {isOver ? `${Math.abs(remaining)}文字オーバー` : `残り${remaining}文字`}
+          {isOver ? `${Math.abs(remaining).toLocaleString()}文字オーバー` : `残り${remaining.toLocaleString()}文字`}
         </span>
       </div>
     </div>
