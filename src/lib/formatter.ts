@@ -18,14 +18,20 @@ export function extractHashtags(text: string): string[] {
 }
 
 export function highlightText(text: string): string {
-  return text
-    .replace(/&/g, '&amp;')
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;')
-    .replace(/(https?:\/\/\S+)/g, '<span class="text-sky-500">$1</span>')
-    .replace(/(#[\w\u3040-\u9FFF\uFF00-\uFFEF]+)/g, '<span class="text-sky-500">$1</span>')
-    .replace(/(@\w+)/g, '<span class="text-sky-500">$1</span>')
-    .replace(/\n/g, '<br>')
+  // URLを先に分割してからHTMLエスケープ（URL内の&がamp;化するのを防ぐ）
+  const parts = text.split(/(https?:\/\/\S+)/g)
+  return parts.map((part, i) => {
+    if (i % 2 === 1) {
+      return `<span class="text-sky-500">${part}</span>`
+    }
+    return part
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/(#[\w\u3040-\u9FFF\uFF00-\uFFEF]+)/g, '<span class="text-sky-500">$1</span>')
+      .replace(/(@\w+)/g, '<span class="text-sky-500">$1</span>')
+      .replace(/\n/g, '<br>')
+  }).join('')
 }
 
 export function splitIntoThread(text: string, limit = 140): string[] {
@@ -34,7 +40,7 @@ export function splitIntoThread(text: string, limit = 140): string[] {
   let current = ''
   for (const line of lines) {
     const candidate = current ? current + '\n' + line : line
-    if ([...candidate].length > limit) {
+    if (calcXLength(candidate) > limit) {
       if (current) parts.push(current)
       current = line
     } else {

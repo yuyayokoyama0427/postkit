@@ -2,19 +2,22 @@ import { highlightText } from '../lib/formatter'
 
 interface Props {
   text: string
+  displayName?: string
+  handle?: string
 }
 
-export function TwitterPreview({ text }: Props) {
+export function TwitterPreview({ text, displayName = 'PostKit User', handle = 'postkit_user' }: Props) {
   const now = new Date().toLocaleTimeString('ja-JP', { hour: '2-digit', minute: '2-digit' })
+  const initial = (displayName[0] ?? 'P').toUpperCase()
 
   return (
     <div className="border border-gray-200 rounded-2xl p-4 bg-white max-w-sm mx-auto font-sans">
       {/* User row */}
       <div className="flex items-start gap-3 mb-3">
-        <div className="w-10 h-10 rounded-full bg-gradient-to-br from-blue-400 to-blue-600 shrink-0 flex items-center justify-center text-white font-bold text-sm">P</div>
+        <div className="w-10 h-10 rounded-full bg-gradient-to-br from-blue-400 to-blue-600 shrink-0 flex items-center justify-center text-white font-bold text-sm">{initial}</div>
         <div>
-          <p className="font-bold text-gray-900 text-sm leading-tight">PostKit User</p>
-          <p className="text-gray-500 text-xs">@postkit_user</p>
+          <p className="font-bold text-gray-900 text-sm leading-tight">{displayName}</p>
+          <p className="text-gray-500 text-xs">@{handle}</p>
         </div>
       </div>
 

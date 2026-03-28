@@ -42,8 +42,8 @@ export function Editor({ text, platform, limit, label, isPro, premiumMode, showP
               {premiumMode ? '★ プレミアム' : '☆ プレミアム'}
             </button>
           )}
-          {!isPro && (
-            <span className="text-xs text-gray-300">プレミアム切替はPro版</span>
+          {!isPro && showPremiumToggle && (
+            <span className="text-xs text-blue-400">Pro版で長文モード（25,000文字）解放</span>
           )}
         </div>
         {text && (

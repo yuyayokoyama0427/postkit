@@ -9,7 +9,7 @@ export function usePro() {
   async function activate(key: string) {
     setLoading(true)
     setError(null)
-    const ok = await validateLicense(key)
+    const ok = await validateLicense(key.trim())
     if (ok) {
       setIsPro(true)
     } else {

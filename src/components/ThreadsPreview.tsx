@@ -2,16 +2,19 @@ import { highlightText } from '../lib/formatter'
 
 interface Props {
   text: string
+  displayName?: string
+  handle?: string
 }
 
-export function ThreadsPreview({ text }: Props) {
+export function ThreadsPreview({ text, displayName = 'PostKit User', handle = 'postkit_user' }: Props) {
+  const initial = (displayName[0] ?? 'P').toUpperCase()
   return (
     <div className="border border-gray-200 rounded-2xl p-4 bg-white max-w-sm mx-auto font-sans">
       {/* User row */}
       <div className="flex items-start gap-3 mb-3">
-        <div className="w-9 h-9 rounded-full bg-gradient-to-br from-gray-700 to-gray-900 shrink-0 flex items-center justify-center text-white font-bold text-sm">P</div>
+        <div className="w-9 h-9 rounded-full bg-gradient-to-br from-gray-700 to-gray-900 shrink-0 flex items-center justify-center text-white font-bold text-sm">{initial}</div>
         <div className="flex-1">
-          <p className="font-semibold text-gray-900 text-sm">postkit_user</p>
+          <p className="font-semibold text-gray-900 text-sm">{handle}</p>
           {/* Thread text */}
           <div
             className="text-gray-900 text-sm leading-relaxed mt-1 whitespace-pre-wrap break-words"
@@ -39,8 +42,6 @@ export function ThreadsPreview({ text }: Props) {
         </button>
       </div>
 
-      {/* char count */}
-      <p className="text-gray-400 text-xs mt-3 ml-12">文字数：{[...text].length} / 500</p>
     </div>
   )
 }

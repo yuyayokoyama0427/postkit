@@ -8,7 +8,8 @@ import { TemplatePanel } from './components/TemplatePanel'
 import { LicenseModal } from './components/LicenseModal'
 import { usePro } from './hooks/usePro'
 import { useTemplates } from './hooks/useTemplates'
-import { splitIntoThread, highlightText } from './lib/formatter'
+import { useProfile } from './hooks/useProfile'
+import { splitIntoThread, highlightText, calcXLength } from './lib/formatter'
 
 type Platform = 'x' | 'instagram' | 'threads'
 
@@ -45,8 +46,6 @@ const HAS_PREMIUM_TIER: Record<Platform, boolean> = {
   threads: false,
 }
 
-const PRO_PLATFORMS: Platform[] = ['instagram', 'threads']
-
 export default function App() {
   const [text, setText] = useState('')
   const [platform, setPlatform] = useState<Platform>('x')
@@ -56,15 +55,13 @@ export default function App() {
 
   const { isPro, activate, deactivate, loading, error } = usePro()
   const { templates, addTemplate, removeTemplate } = useTemplates()
+  const { profile, updateProfile } = useProfile()
+  const [showProfileEdit, setShowProfileEdit] = useState(false)
 
   const premiumMode = premiumModes[platform]
   const currentLimit = (isPro && premiumMode) ? PREMIUM_LIMITS[platform] : FREE_LIMITS[platform]
 
   function handlePlatformChange(p: Platform) {
-    if (PRO_PLATFORMS.includes(p) && !isPro) {
-      setShowModal(true)
-      return
-    }
     setPlatform(p)
   }
 
@@ -104,9 +101,6 @@ export default function App() {
                 className={`flex-1 text-sm py-1.5 rounded-lg font-medium transition-colors ${platform === p ? 'bg-white text-gray-900 shadow-sm' : 'text-gray-500 hover:text-gray-700'}`}
               >
                 {PLATFORM_LABELS[p]}
-                {PRO_PLATFORMS.includes(p) && !isPro && (
-                  <span className="ml-1 text-xs text-blue-500">Pro</span>
-                )}
               </button>
             ))}
           </div>
@@ -130,6 +124,44 @@ export default function App() {
               クリア
             </button>
           )}
+
+          {/* Profile */}
+          <div className="border border-gray-200 rounded-xl overflow-hidden">
+            <button
+              onClick={() => setShowProfileEdit(v => !v)}
+              className="w-full flex items-center justify-between px-4 py-3 text-sm font-medium text-gray-700 hover:bg-gray-50"
+            >
+              <span>プロフィール設定</span>
+              <svg className={`w-4 h-4 transition-transform ${showProfileEdit ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" /></svg>
+            </button>
+            {showProfileEdit && (
+              <div className="px-4 pb-4 border-t border-gray-100 space-y-3 pt-3">
+                <div>
+                  <label className="block text-xs text-gray-500 mb-1">表示名</label>
+                  <input
+                    type="text"
+                    value={profile.displayName}
+                    onChange={e => updateProfile({ displayName: e.target.value })}
+                    className="w-full border border-gray-300 rounded-lg px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-400"
+                    placeholder="PostKit User"
+                  />
+                </div>
+                <div>
+                  <label className="block text-xs text-gray-500 mb-1">@ユーザー名</label>
+                  <div className="flex items-center border border-gray-300 rounded-lg overflow-hidden focus-within:ring-2 focus-within:ring-blue-400">
+                    <span className="px-2 text-gray-400 text-sm bg-gray-50 border-r border-gray-300 py-1.5">@</span>
+                    <input
+                      type="text"
+                      value={profile.handle}
+                      onChange={e => updateProfile({ handle: e.target.value.replace(/^@/, '') })}
+                      className="flex-1 px-3 py-1.5 text-sm focus:outline-none bg-white"
+                      placeholder="postkit_user"
+                    />
+                  </div>
+                </div>
+              </div>
+            )}
+          </div>
 
           {/* Templates */}
           <div className="border border-gray-200 rounded-xl overflow-hidden">
@@ -174,27 +206,27 @@ export default function App() {
                     <span className="absolute -top-2 left-4 bg-blue-100 text-blue-600 text-xs rounded-full px-2 py-0.5">{i + 1}</span>
                     <div className="border border-blue-200 rounded-2xl p-4 bg-white max-w-sm mx-auto font-sans">
                       <div className="flex items-start gap-3 mb-2">
-                        <div className="w-10 h-10 rounded-full bg-gradient-to-br from-blue-400 to-blue-600 shrink-0 flex items-center justify-center text-white font-bold text-sm">P</div>
+                        <div className="w-10 h-10 rounded-full bg-gradient-to-br from-blue-400 to-blue-600 shrink-0 flex items-center justify-center text-white font-bold text-sm">{(profile.displayName[0] ?? 'P').toUpperCase()}</div>
                         <div>
-                          <p className="font-bold text-gray-900 text-sm leading-tight">PostKit User</p>
-                          <p className="text-gray-500 text-xs">@postkit_user</p>
+                          <p className="font-bold text-gray-900 text-sm leading-tight">{profile.displayName}</p>
+                          <p className="text-gray-500 text-xs">@{profile.handle}</p>
                         </div>
                       </div>
                       <div
                         className="text-gray-900 text-sm leading-relaxed whitespace-pre-wrap break-words"
                         dangerouslySetInnerHTML={{ __html: highlightText(part) }}
                       />
-                      <p className="text-xs text-gray-400 mt-2 text-right">{[...part].length} / {splitLimit}</p>
+                      <p className="text-xs text-gray-400 mt-2 text-right">{calcXLength(part)} / {splitLimit}</p>
                     </div>
                   </div>
                 ))}
               </div>
             ) : (
-              <TwitterPreview text={text} />
+              <TwitterPreview text={text} displayName={profile.displayName} handle={profile.handle} />
             )
           })()}
-          {platform === 'instagram' && <InstagramPreview text={text} />}
-          {platform === 'threads' && <ThreadsPreview text={text} />}
+          {platform === 'instagram' && <InstagramPreview text={text} handle={profile.handle} />}
+          {platform === 'threads' && <ThreadsPreview text={text} displayName={profile.displayName} handle={profile.handle} />}
         </div>
       </main>
 

@@ -24,9 +24,8 @@ export function LicenseModal({ onActivate, onClose, loading, error }: Props) {
             <p className="text-sm text-gray-500 mb-5">買い切り1,000円で全機能が使えます。</p>
             <div className="bg-blue-50 rounded-xl p-4 mb-5 space-y-1.5">
               <p className="text-sm font-semibold text-blue-700 mb-2">Pro版でできること</p>
-              <p className="text-sm text-blue-600">✓ Instagram・Threadsプレビュー</p>
-              <p className="text-sm text-blue-600">✓ 投稿テンプレート保存（最大20件）</p>
-              <p className="text-sm text-blue-600">✓ スレッド（連投）自動分割</p>
+              <p className="text-sm text-blue-600">✓ 投稿テンプレート保存・呼び出し（最大20件）</p>
+              <p className="text-sm text-blue-600">✓ X長文モード（最大25,000文字）</p>
               <p className="text-xs text-blue-400 mt-2">買い切り 1,000円（税込）</p>
             </div>
             <a href={CHECKOUT_URL} target="_blank" rel="noopener noreferrer"
@@ -53,7 +52,7 @@ export function LicenseModal({ onActivate, onClose, loading, error }: Props) {
             <div className="flex gap-2 mt-2">
               <button
                 className="flex-1 bg-blue-600 hover:bg-blue-700 text-white rounded-lg py-2 text-sm font-medium disabled:opacity-50"
-                onClick={() => onActivate(key)}
+                onClick={() => onActivate(key.trim())}
                 disabled={loading || !key.trim()}
               >
                 {loading ? '確認中...' : '有効化する'}

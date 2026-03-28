@@ -2,9 +2,11 @@ import { highlightText } from '../lib/formatter'
 
 interface Props {
   text: string
+  displayName?: string
+  handle?: string
 }
 
-export function InstagramPreview({ text }: Props) {
+export function InstagramPreview({ text, handle = 'postkit_user' }: Props) {
   const hashtags = text.match(/#[\w\u3040-\u9FFF\uFF00-\uFFEF]+/g) ?? []
 
   return (
@@ -12,7 +14,7 @@ export function InstagramPreview({ text }: Props) {
       {/* Header */}
       <div className="flex items-center gap-3 px-4 py-3 border-b border-gray-100">
         <div className="w-8 h-8 rounded-full bg-gradient-to-tr from-yellow-400 via-pink-500 to-purple-600 shrink-0" />
-        <p className="font-semibold text-gray-900 text-sm">postkit_user</p>
+        <p className="font-semibold text-gray-900 text-sm">{handle}</p>
         <span className="ml-auto text-gray-400 text-lg">···</span>
       </div>
 
@@ -32,13 +34,12 @@ export function InstagramPreview({ text }: Props) {
       {/* Caption */}
       <div className="px-4 pb-4">
         <p className="text-sm text-gray-900 leading-relaxed">
-          <span className="font-semibold mr-1">postkit_user</span>
+          <span className="font-semibold mr-1">{handle}</span>
           <span dangerouslySetInnerHTML={{ __html: text ? highlightText(text) : '<span class="text-gray-400">投稿内容がここに表示されます</span>' }} />
         </p>
         {hashtags.length > 0 && (
           <p className="text-sky-500 text-xs mt-1">{hashtags.join(' ')}</p>
         )}
-        <p className="text-gray-400 text-xs mt-1">文字数：{[...text].length} / 2,200</p>
       </div>
     </div>
   )
